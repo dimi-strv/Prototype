@@ -1,0 +1,10 @@
+# Ignore everything in packages/ except README.md so they're just local
+packages/*
+!packages/README.md
+
+# macOS system files
+.DS_Store
+.DS_Store?
+
+# Local development tools
+

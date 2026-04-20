@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Map Comparison</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0e11;
+      --surface: #14161b;
+      --border: #2a2d36;
+      --accent-old: #f0a500;
+      --accent-new: #00c4a0;
+      --text: #e8eaf0;
+      --muted: #6b7080;
+      --label-h: 32px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow: hidden;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    header {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .header-title span {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sync-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--accent-new);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-new);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .coords-display {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    /* ── Main layout ─────────────────────────── */
+    .maps-wrapper {
+      display: flex;
+      height: calc(100vh - 52px);
+      gap: 0;
+    }
+
+    .map-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-pane + .map-pane {
+      border-left: 2px solid var(--border);
+    }
+
+    /* Label bar */
+    .map-label {
+      height: var(--label-h);
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .map-label.old {
+      background: color-mix(in srgb, var(--accent-old) 12%, var(--surface));
+      color: var(--accent-old);
+      border-bottom: 1px solid color-mix(in srgb, var(--accent-old) 30%, transparent);
+    }
+
+    .map-label.new {
+      background: color-mix(in srgb, var(--accent-new) 12%, var(--surface));
+      color: var(--accent-new);
+      border-bottom: 1px solid color-mix(in srgb, var(--accent-new) 30%, transparent);
+    }
+
+    .label-pip {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .old .label-pip { background: var(--accent-old); }
+    .new .label-pip { background: var(--accent-new); }
+
+    .label-text { flex: 1; }
+    .label-tag {
+      font-size: 10px;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    /* Map containers */
+    .map-container {
+      flex: 1;
+      position: relative;
+    }
+
+    /* Override maplibre logo/attribution to match dark theme */
+    .maplibregl-ctrl-attrib {
+      background: rgba(13,14,17,0.75) !important;
+      color: var(--muted) !important;
+      font-family: 'DM Mono', monospace !important;
+      font-size: 10px !important;
+    }
+
+    .maplibregl-ctrl-attrib a { color: var(--muted) !important; }
+
+    .maplibregl-ctrl-logo { opacity: 0.4 !important; filter: invert(1) !important; }
+
+    /* Divider drag handle */
+    .divider {
+      width: 2px;
+      background: var(--border);
+      position: relative;
+      flex-shrink: 0;
+      z-index: 10;
+      cursor: col-resize;
+      transition: background 0.15s;
+    }
+
+    .divider:hover, .divider.dragging {
+      background: var(--accent-new);
+    }
+
+    .divider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 48px;
+      border-radius: 11px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+      pointer-events: none;
+    }
+
+    .divider-handle span {
+      display: block;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    /* Zoom indicator */
+    .zoom-pill {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13,14,17,0.85);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 10px;
+      color: var(--text);
+      pointer-events: none;
+      z-index: 5;
+      letter-spacing: 0.06em;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">Map <span>Comparison</span></div>
+    <div class="sync-badge"><div class="sync-dot"></div> Views Synced</div>
+    <div class="coords-display" id="coords">Pan or zoom either map to explore</div>
+  </header>
+
+  <div class="maps-wrapper" id="wrapper">
+
+    <div class="map-pane" id="pane-old">
+      <div class="map-label old">
+        <div class="label-pip"></div>
+        <div class="label-text">Prod Version <span class="label-tag">(increment 1 experiment)</span></div>
+      </div>
+      <div class="map-container" id="map-old"></div>
+    </div>
+
+    <div class="divider" id="divider">
+      <div class="divider-handle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="map-pane" id="pane-new">
+      <div class="map-label new">
+        <div class="label-pip"></div>
+        <div class="label-text">New Version <span class="label-tag">— NEW</span></div>
+      </div>
+      <div class="map-container" id="map-new"></div>
+    </div>
+
+  </div>
+
+  <div class="zoom-pill" id="zoom-pill">zoom —</div>
+
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <script>
+    // ── Map initialisation ──────────────────────────────────────────
+    const OLD_STYLE = 'https://api.maptiler.com/maps/019daa57-c0b8-784d-a194-b287d461ba87/style.json?key=4voGNVXW4Ghpvy1rCI1S';
+    const NEW_STYLE = 'https://api.maptiler.com/maps/019d6d40-e580-7a3d-a389-c6e2101a3c51/style.json?key=4voGNVXW4Ghpvy1rCI1S';
+
+    const INIT = { center: [-122.4426, 37.7595], zoom: 12 };
+
+    const mapOld = new maplibregl.Map({
+      container: 'map-old',
+      style: OLD_STYLE,
+      ...INIT,
+      attributionControl: true
+    });
+
+    const mapNew = new maplibregl.Map({
+      container: 'map-new',
+      style: NEW_STYLE,
+      ...INIT,
+      attributionControl: true
+    });
+
+    // ── Sync logic ──────────────────────────────────────────────────
+    let syncing = false;
+
+    function syncFrom(source, target) {
+      source.on('move', () => {
+        if (syncing) return;
+        syncing = true;
+        const c = source.getCenter();
+        const z = source.getZoom();
+        const b = source.getBearing();
+        const p = source.getPitch();
+        target.jumpTo({ center: c, zoom: z, bearing: b, pitch: p });
+        updateHUD(c, z);
+        syncing = false;
+      });
+    }
+
+    syncFrom(mapOld, mapNew);
+    syncFrom(mapNew, mapOld);
+
+    // ── HUD update ──────────────────────────────────────────────────
+    const coordsEl  = document.getElementById('coords');
+    const zoomPill  = document.getElementById('zoom-pill');
+
+    function updateHUD(center, zoom) {
+      const lat = center.lat.toFixed(4);
+      const lng = center.lng.toFixed(4);
+      coordsEl.textContent = `${lat}, ${lng}`;
+      zoomPill.textContent = `zoom  ${zoom.toFixed(1)}`;
+    }
+
+    mapOld.on('load', () => updateHUD(mapOld.getCenter(), mapOld.getZoom()));
+
+    // ── Resizable divider ───────────────────────────────────────────
+    const divider = document.getElementById('divider');
+    const wrapper  = document.getElementById('wrapper');
+    const paneOld  = document.getElementById('pane-old');
+    const paneNew  = document.getElementById('pane-new');
+
+    let dragging = false, startX = 0, startW = 0;
+
+    divider.addEventListener('mousedown', e => {
+      dragging = true;
+      startX = e.clientX;
+      startW = paneOld.offsetWidth;
+      divider.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const totalW = wrapper.offsetWidth - divider.offsetWidth;
+      const newW = Math.min(Math.max(startW + (e.clientX - startX), totalW * 0.2), totalW * 0.8);
+      paneOld.style.flex = 'none';
+      paneOld.style.width = newW + 'px';
+      paneNew.style.flex = '1';
+      mapOld.resize();
+      mapNew.resize();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      divider.classList.remove('dragging');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    });
+  </script>
+</body>
+</html>

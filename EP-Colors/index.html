@@ -24,18 +24,42 @@
     margin-bottom: 40px;
   }
   .bar-block {
-    margin-bottom: 28px;
+    margin-bottom: 32px;
   }
   .bar-label {
     font-size: 13px;
     font-weight: 600;
     margin-bottom: 6px;
   }
+  .bar-wrap {
+    position: relative;
+  }
   .bar {
     height: 34px;
     border-radius: 6px;
     border: 1px solid rgba(0,0,0,0.08);
     position: relative;
+  }
+  .zero-line {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    left: 50.000%;
+    width: 2px;
+    background: #1c1a18;
+    transform: translateX(-1px);
+    z-index: 2;
+  }
+  .zero-line::before {
+    content: "0%";
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: #1c1a18;
+    white-space: nowrap;
   }
   .ticks {
     position: relative;
@@ -48,6 +72,9 @@
     font-size: 10px;
     color: #8f8c8a;
     white-space: nowrap;
+  }
+  .ticks span.zero-tick {
+    visibility: hidden;
   }
   table {
     border-collapse: collapse;
@@ -70,6 +97,11 @@
   tr.match td {
     background: #f5f4f2;
   }
+  tr.zero td {
+    font-weight: 700;
+    border-top: 2px solid #1c1a18;
+    border-bottom: 2px solid #1c1a18;
+  }
   .swatch {
     display: inline-block;
     width: 12px;
@@ -89,32 +121,35 @@
 <body>
 
 <h1>Incline Gradient Colors — Cycling vs Hiking</h1>
-<p class="subtitle">Comparison of the elevation-profile incline color scale, from -25% to +20% grade.</p>
+<p class="subtitle">Comparison of the elevation-profile incline color scale, from -22% to +22% grade.</p>
 
 <div class="bars">
   <div class="bar-block">
     <div class="bar-label">Cycling</div>
-    <div class="bar" style="background: linear-gradient(to right, #952117 0.000%, #952117 1.111%, #952117 1.111%, #952117 3.333%, #952117 3.333%, #952117 5.556%, #952117 5.556%, #952117 7.778%, #952117 7.778%, #952117 10.000%, #952117 10.000%, #952117 12.222%, #952117 12.222%, #952117 14.444%, #952117 14.444%, #952117 16.667%, #D75536 16.667%, #D75536 18.889%, #E88535 18.889%, #E88535 21.111%, #E88535 21.111%, #E88535 23.333%, #E88535 23.333%, #E88535 25.556%, #E3BD60 25.556%, #E3BD60 27.778%, #E3BD60 27.778%, #E3BD60 30.000%, #8EB747 30.000%, #8EB747 32.222%, #8EB747 32.222%, #8EB747 34.444%, #8EB747 34.444%, #8EB747 36.667%, #8EB747 36.667%, #8EB747 38.889%, #8EB747 38.889%, #8EB747 41.111%, #8EB747 41.111%, #8EB747 43.333%, #8EB747 43.333%, #8EB747 45.556%, #8EB747 45.556%, #8EB747 47.778%, #8EB747 47.778%, #8EB747 50.000%, #8EB747 50.000%, #8EB747 52.222%, #8EB747 52.222%, #8EB747 54.444%, #8EB747 54.444%, #8EB747 56.667%, #8EB747 56.667%, #8EB747 58.889%, #8EB747 58.889%, #8EB747 61.111%, #E3BD60 61.111%, #E3BD60 63.333%, #E3BD60 63.333%, #E3BD60 65.556%, #E3BD60 65.556%, #E3BD60 67.778%, #E88535 67.778%, #E88535 70.000%, #E88535 70.000%, #E88535 72.222%, #E88535 72.222%, #E88535 74.444%, #E88535 74.444%, #E88535 76.667%, #D75536 76.667%, #D75536 78.889%, #D75536 78.889%, #D75536 81.111%, #D75536 81.111%, #D75536 83.333%, #D75536 83.333%, #D75536 85.556%, #D75536 85.556%, #D75536 87.778%, #952117 87.778%, #952117 90.000%, #952117 90.000%, #952117 92.222%, #952117 92.222%, #952117 94.444%, #952117 94.444%, #952117 96.667%, #952117 96.667%, #952117 98.889%, #952117 98.889%, #952117 100.000%)"></div>
-    <div class="ticks"><span style='left:0.000%'>-25%</span><span style='left:11.111%'>-20%</span><span style='left:22.222%'>-15%</span><span style='left:33.333%'>-10%</span><span style='left:44.444%'>-5%</span><span style='left:55.556%'>0%</span><span style='left:66.667%'>5%</span><span style='left:77.778%'>10%</span><span style='left:88.889%'>15%</span><span style='left:100.000%'>20%</span></div>
+    <div class="bar-wrap">
+      <div class="bar" style="background: linear-gradient(to right, #952117 0.000%, #952117 1.136%, #952117 1.136%, #952117 3.409%, #952117 3.409%, #952117 5.682%, #952117 5.682%, #952117 7.955%, #952117 7.955%, #952117 10.227%, #D75536 10.227%, #D75536 12.500%, #E88535 12.500%, #E88535 14.773%, #E88535 14.773%, #E88535 17.045%, #E88535 17.045%, #E88535 19.318%, #E3BD60 19.318%, #E3BD60 21.591%, #E3BD60 21.591%, #E3BD60 23.864%, #8EB747 23.864%, #8EB747 26.136%, #8EB747 26.136%, #8EB747 28.409%, #8EB747 28.409%, #8EB747 30.682%, #8EB747 30.682%, #8EB747 32.955%, #8EB747 32.955%, #8EB747 35.227%, #8EB747 35.227%, #8EB747 37.500%, #8EB747 37.500%, #8EB747 39.773%, #8EB747 39.773%, #8EB747 42.045%, #8EB747 42.045%, #8EB747 44.318%, #8EB747 44.318%, #8EB747 46.591%, #8EB747 46.591%, #8EB747 48.864%, #8EB747 48.864%, #8EB747 51.136%, #8EB747 51.136%, #8EB747 53.409%, #8EB747 53.409%, #8EB747 55.682%, #E3BD60 55.682%, #E3BD60 57.955%, #E3BD60 57.955%, #E3BD60 60.227%, #E3BD60 60.227%, #E3BD60 62.500%, #E88535 62.500%, #E88535 64.773%, #E88535 64.773%, #E88535 67.045%, #E88535 67.045%, #E88535 69.318%, #E88535 69.318%, #E88535 71.591%, #D75536 71.591%, #D75536 73.864%, #D75536 73.864%, #D75536 76.136%, #D75536 76.136%, #D75536 78.409%, #D75536 78.409%, #D75536 80.682%, #D75536 80.682%, #D75536 82.955%, #952117 82.955%, #952117 85.227%, #952117 85.227%, #952117 87.500%, #952117 87.500%, #952117 89.773%, #952117 89.773%, #952117 92.045%, #952117 92.045%, #952117 94.318%, #952117 94.318%, #952117 96.591%, #952117 96.591%, #952117 98.864%, #952117 98.864%, #952117 100.000%)"></div>
+      <div class="zero-line"></div>
+    </div>
+    <div class="ticks"><span class='' style='left:0.000%'>-22%</span><span class='' style='left:4.545%'>-20%</span><span class='' style='left:9.091%'>-18%</span><span class='' style='left:13.636%'>-16%</span><span class='' style='left:18.182%'>-14%</span><span class='' style='left:22.727%'>-12%</span><span class='' style='left:27.273%'>-10%</span><span class='' style='left:31.818%'>-8%</span><span class='' style='left:36.364%'>-6%</span><span class='' style='left:40.909%'>-4%</span><span class='' style='left:45.455%'>-2%</span><span class='zero-tick' style='left:50.000%'>0%</span><span class='' style='left:54.545%'>2%</span><span class='' style='left:59.091%'>4%</span><span class='' style='left:63.636%'>6%</span><span class='' style='left:68.182%'>8%</span><span class='' style='left:72.727%'>10%</span><span class='' style='left:77.273%'>12%</span><span class='' style='left:81.818%'>14%</span><span class='' style='left:86.364%'>16%</span><span class='' style='left:90.909%'>18%</span><span class='' style='left:95.455%'>20%</span><span class='' style='left:100.000%'>22%</span></div>
   </div>
   <div class="bar-block">
     <div class="bar-label">Hiking</div>
-    <div class="bar" style="background: linear-gradient(to right, #952117 0.000%, #952117 1.111%, #952117 1.111%, #952117 3.333%, #952117 3.333%, #952117 5.556%, #952117 5.556%, #952117 7.778%, #952117 7.778%, #952117 10.000%, #D75536 10.000%, #D75536 12.222%, #D75536 12.222%, #D75536 14.444%, #E88535 14.444%, #E88535 16.667%, #E88535 16.667%, #E88535 18.889%, #E3BD60 18.889%, #E3BD60 21.111%, #E3BD60 21.111%, #E3BD60 23.333%, #E3BD60 23.333%, #E3BD60 25.556%, #8EB747 25.556%, #8EB747 27.778%, #8EB747 27.778%, #8EB747 30.000%, #8EB747 30.000%, #8EB747 32.222%, #8EB747 32.222%, #8EB747 34.444%, #8EB747 34.444%, #8EB747 36.667%, #8EB747 36.667%, #8EB747 38.889%, #8EB747 38.889%, #8EB747 41.111%, #8EB747 41.111%, #8EB747 43.333%, #8EB747 43.333%, #8EB747 45.556%, #8EB747 45.556%, #8EB747 47.778%, #8EB747 47.778%, #8EB747 50.000%, #8EB747 50.000%, #8EB747 52.222%, #8EB747 52.222%, #8EB747 54.444%, #8EB747 54.444%, #8EB747 56.667%, #8EB747 56.667%, #8EB747 58.889%, #8EB747 58.889%, #8EB747 61.111%, #8EB747 61.111%, #8EB747 63.333%, #8EB747 63.333%, #8EB747 65.556%, #8EB747 65.556%, #8EB747 67.778%, #E3BD60 67.778%, #E3BD60 70.000%, #E3BD60 70.000%, #E3BD60 72.222%, #E3BD60 72.222%, #E3BD60 74.444%, #E88535 74.444%, #E88535 76.667%, #E88535 76.667%, #E88535 78.889%, #E88535 78.889%, #E88535 81.111%, #E88535 81.111%, #E88535 83.333%, #E88535 83.333%, #E88535 85.556%, #D75536 85.556%, #D75536 87.778%, #D75536 87.778%, #D75536 90.000%, #D75536 90.000%, #D75536 92.222%, #D75536 92.222%, #D75536 94.444%, #D75536 94.444%, #D75536 96.667%, #952117 96.667%, #952117 98.889%, #952117 98.889%, #952117 100.000%)"></div>
-    <div class="ticks"><span style='left:0.000%'>-25%</span><span style='left:11.111%'>-20%</span><span style='left:22.222%'>-15%</span><span style='left:33.333%'>-10%</span><span style='left:44.444%'>-5%</span><span style='left:55.556%'>0%</span><span style='left:66.667%'>5%</span><span style='left:77.778%'>10%</span><span style='left:88.889%'>15%</span><span style='left:100.000%'>20%</span></div>
+    <div class="bar-wrap">
+      <div class="bar" style="background: linear-gradient(to right, #952117 0.000%, #952117 1.136%, #952117 1.136%, #952117 3.409%, #D75536 3.409%, #D75536 5.682%, #D75536 5.682%, #D75536 7.955%, #E88535 7.955%, #E88535 10.227%, #E88535 10.227%, #E88535 12.500%, #E3BD60 12.500%, #E3BD60 14.773%, #E3BD60 14.773%, #E3BD60 17.045%, #E3BD60 17.045%, #E3BD60 19.318%, #8EB747 19.318%, #8EB747 21.591%, #8EB747 21.591%, #8EB747 23.864%, #8EB747 23.864%, #8EB747 26.136%, #8EB747 26.136%, #8EB747 28.409%, #8EB747 28.409%, #8EB747 30.682%, #8EB747 30.682%, #8EB747 32.955%, #8EB747 32.955%, #8EB747 35.227%, #8EB747 35.227%, #8EB747 37.500%, #8EB747 37.500%, #8EB747 39.773%, #8EB747 39.773%, #8EB747 42.045%, #8EB747 42.045%, #8EB747 44.318%, #8EB747 44.318%, #8EB747 46.591%, #8EB747 46.591%, #8EB747 48.864%, #8EB747 48.864%, #8EB747 51.136%, #8EB747 51.136%, #8EB747 53.409%, #8EB747 53.409%, #8EB747 55.682%, #8EB747 55.682%, #8EB747 57.955%, #8EB747 57.955%, #8EB747 60.227%, #8EB747 60.227%, #8EB747 62.500%, #E3BD60 62.500%, #E3BD60 64.773%, #E3BD60 64.773%, #E3BD60 67.045%, #E3BD60 67.045%, #E3BD60 69.318%, #E88535 69.318%, #E88535 71.591%, #E88535 71.591%, #E88535 73.864%, #E88535 73.864%, #E88535 76.136%, #E88535 76.136%, #E88535 78.409%, #E88535 78.409%, #E88535 80.682%, #D75536 80.682%, #D75536 82.955%, #D75536 82.955%, #D75536 85.227%, #D75536 85.227%, #D75536 87.500%, #D75536 87.500%, #D75536 89.773%, #D75536 89.773%, #D75536 92.045%, #952117 92.045%, #952117 94.318%, #952117 94.318%, #952117 96.591%, #952117 96.591%, #952117 98.864%, #952117 98.864%, #952117 100.000%)"></div>
+      <div class="zero-line"></div>
+    </div>
+    <div class="ticks"><span class='' style='left:0.000%'>-22%</span><span class='' style='left:4.545%'>-20%</span><span class='' style='left:9.091%'>-18%</span><span class='' style='left:13.636%'>-16%</span><span class='' style='left:18.182%'>-14%</span><span class='' style='left:22.727%'>-12%</span><span class='' style='left:27.273%'>-10%</span><span class='' style='left:31.818%'>-8%</span><span class='' style='left:36.364%'>-6%</span><span class='' style='left:40.909%'>-4%</span><span class='' style='left:45.455%'>-2%</span><span class='zero-tick' style='left:50.000%'>0%</span><span class='' style='left:54.545%'>2%</span><span class='' style='left:59.091%'>4%</span><span class='' style='left:63.636%'>6%</span><span class='' style='left:68.182%'>8%</span><span class='' style='left:72.727%'>10%</span><span class='' style='left:77.273%'>12%</span><span class='' style='left:81.818%'>14%</span><span class='' style='left:86.364%'>16%</span><span class='' style='left:90.909%'>18%</span><span class='' style='left:95.455%'>20%</span><span class='' style='left:100.000%'>22%</span></div>
   </div>
 </div>
 
-<p class="legend">Shaded rows = incline values where Cycling and Hiking use the same color.</p>
+<p class="legend">Shaded rows = incline values where Cycling and Hiking use the same color. Bold row = 0%.</p>
 
 <table>
   <thead>
     <tr><th>Incline</th><th>Cycling</th><th>Hiking</th></tr>
   </thead>
   <tbody>
-    <tr class='match'><td>-25%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
-<tr class='match'><td>-24%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
-<tr class='match'><td>-23%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
-<tr class='match'><td>-22%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
+    <tr class='match'><td>-22%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
 <tr class='match'><td>-21%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
 <tr><td>-20%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#D75536'></span>#D75536</td></tr>
 <tr><td>-19%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#D75536'></span>#D75536</td></tr>
@@ -136,7 +171,7 @@
 <tr class='match'><td>-3%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
 <tr class='match'><td>-2%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
 <tr class='match'><td>-1%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
-<tr class='match'><td>0%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
+<tr class='match zero'><td>0%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
 <tr class='match'><td>1%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
 <tr class='match'><td>2%</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
 <tr><td>3%</td><td><span class='swatch' style='background:#E3BD60'></span>#E3BD60</td><td><span class='swatch' style='background:#8EB747'></span>#8EB747</td></tr>
@@ -157,6 +192,8 @@
 <tr><td>18%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#D75536'></span>#D75536</td></tr>
 <tr class='match'><td>19%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
 <tr class='match'><td>20%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
+<tr class='match'><td>21%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
+<tr class='match'><td>22%</td><td><span class='swatch' style='background:#952117'></span>#952117</td><td><span class='swatch' style='background:#952117'></span>#952117</td></tr>
   </tbody>
 </table>
 
